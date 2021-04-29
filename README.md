@@ -13,7 +13,7 @@ Which means you'll either have to manually put ansikit in Lua's require director
 or use in Hilbish.
 
 # Usage
-`lua hilbifetch.lua`
+`lua hilbifetch.lua`  
 Or within Hilbish, `dofile 'hilbifetch.lua'`
 
 # License
