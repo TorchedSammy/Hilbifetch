@@ -12,8 +12,7 @@ local ascii =
 ⠀⠀⠀⢈⣿⣿⣿⣿⣷⣿⣿⢟⣍⣤⣨⡴⣄⢎⢍⡖⡿⠽⣿⣟⣷⣄⠀⠀⠀⠀
 ⠀⠀⠀⠸⣿⣿⣿⣿⢿⣯⣮⣟⣾⣿⠋⠘⠉⠑⣳⡻⣦⣯⣽⣿⣿⣿⡀⠀⠀⠀
 ⠀⠀⠀⠀⠘⢿⣷⣽⣿⡿⡎⠛⠋⠁⠀⠀⠀⠀⢳⢿⣽⣷⣿⣝⢿⡿⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠉⠙⠻⠋⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣽⣾⡿⠟⠁⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠃⠹⠇⠀⠀⠀⠀⠀]]
+⠀⠀⠀⠀⠀⠀⠉⠙⠻⠋⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣽⣾⡿⠟⠁⠀⠀⠀⠀]]
 
 function string.split(str, delimiter)
 	local result = {}
@@ -48,6 +47,6 @@ local asciiarr = string.split(ascii, "\n")
 local _, len = longest(asciiarr)
 for i = 1, #asciiarr do
 	local spacecount = len - string.len(asciiarr[i])
-	print(asciiarr[i] .. string.rep(" ", spacecount) .. "INFO", spacecount, len)
+	print(asciiarr[i] .. string.rep(" ", spacecount) .. "INFO")
 end
 
