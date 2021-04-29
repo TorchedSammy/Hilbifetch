@@ -1,8 +1,10 @@
 local ansikit = require 'ansikit'
+local infotable = {}
+local infoidx = {}
 
+-- ASCII art
 local ascii =
-[[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣐⣶⣶⣀⡀⣤⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+[[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣐⣶⣶⣀⡀⣤⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⣠⣴⣖⢶⣶⣦⣀⢰⣿⣿⣿⣿⠏⠀⠀⣐⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⣸⣿⣿⣿⣯⣻⣿⣿⢹⣿⣿⣿⡟⠠⠨⠪⠂⣰⣦⣄⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⢠⢯⣶⣮⢿⣿⣷⡽⣿⡘⣿⡿⣿⠁⡑⠡⠃⣰⣿⣿⣿⣦⠀⠀⠀⠀⠀
@@ -14,6 +16,7 @@ local ascii =
 ⠀⠀⠀⠀⠘⢿⣷⣽⣿⡿⡎⠛⠋⠁⠀⠀⠀⠀⢳⢿⣽⣷⣿⣝⢿⡿⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠉⠙⠻⠋⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣽⣾⡿⠟⠁⠀⠀⠀⠀]]
 
+-- Utility Functions
 function string.split(str, delimiter)
 	local result = {}
 	local from = 1
@@ -43,10 +46,46 @@ function longest(arr)
 	return longestidx, longestint
 end
 
+-- For config.lua
+function info(tbl)
+	local i = 1
+	for k, v in pairs(tbl) do
+		local function _infofunc()
+			if k == "os" then
+				-- Should always exist on unix
+				local f = io.open("/etc/os-release", "rb")
+				local content = f:read '*a'
+				f:close()
+
+				local os = string.split(content, "\n")[1]
+				os = string.split(os, "=")[2]:gsub("\"", "")
+				return os
+			end
+		end
+		infotable[k] = {name = v, infofunc = _infofunc}
+		infoidx[i] = k
+		i = i + 1
+	end
+end
+
+dofile 'config.lua'
+
+-- Hilbifetch - Where we actually print our info
 local asciiarr = string.split(ascii, "\n")
 local _, len = longest(asciiarr)
+
 for i = 1, #asciiarr do
-	local spacecount = len - string.len(asciiarr[i])
-	print(asciiarr[i] .. string.rep(" ", spacecount) .. "INFO")
+	asciipart = asciiarr[i]
+	local infotbl = infotable[infoidx[i]]
+	local infoname = nil
+	local inf = nil
+	local fullinfo = ""
+	if infotbl ~= nil then
+		infoname = infotbl['name']
+		inf = infotbl['infofunc']()
+		fullinfo = ansikit.format('{bold}{blue}' .. infoname .. '{reset}') .. ' > ' .. inf
+	end
+	local spacecount = len - string.len(asciipart)
+	print(asciipart .. string.rep(" ", spacecount) .. fullinfo)
 end
 
