@@ -90,10 +90,21 @@ local _, len = longest(asciiarr)
 
 for i = 1, #asciiarr do
 	asciipart = asciiarr[i]
-	local infotbl = infotable[infoidx[i]]
+	local infotbl = infotable[infoidx[i - 2]]
 	local infoname = nil
 	local inf = nil
 	local fullinfo = ''
+	if i == 1 then
+		username = os.getenv 'USER'
+
+		local f = io.open('/etc/hostname', 'rb')
+		hostname = f:read '*a'
+		f:close()
+
+		fullinfo = ansikit.format '{bold}{magenta}' .. username .. '@'
+		.. hostname:gsub('\n', '') .. ansikit.format '{reset}'
+	end
+	if i == 2 then fullinfo = string.rep('~', hostname:len() + 1 + username:len()) end
 	if infotbl ~= nil then
 		infoname = infotbl['name']
 		inf = infotbl['infofunc']()
