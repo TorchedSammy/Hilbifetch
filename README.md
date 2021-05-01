@@ -1,7 +1,9 @@
-# Hilbifetch
-> Simple and small fetch written in Lua.
+<div align='center'>
+<h1>Hilbifetch</h1>
+<blockquote>Simple and small fetch written in Lua.</blockquote>
+</div>
 
-<img src="preview.png">
+<img src='preview.png' align='center'>
 
 Hilbifetch is your average system info fetch inspired by Neofetch, my own
 [Bunnyfetch](https://github.com/Luvella/Bunnyfetch) and the others.  
