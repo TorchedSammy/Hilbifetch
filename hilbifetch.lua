@@ -96,7 +96,12 @@ function info(tbl)
 	end
 end
 
-dofile 'config.lua'
+local ok = pcall(function() dofile 'hfconf.lua' end)
+if not ok then
+	pcall(function()
+		dofile (os.getenv 'HOME' .. '/.config/hilbifetch/hfconf.lua')
+	end)
+end
 
 -- Hilbifetch - Where we actually print our info
 local asciiarr = string.split(ascii, '\n')
