@@ -12,9 +12,8 @@ But this time, it's written and configured in Lua.
 # Setup
 > Hilbifetch is in a very early state, expect it to look weird or have odd bugs.
 
-Hilbifetch requires you have `ansikit`, which is provided in Hilbish by default.  
-Which means you'll either have to manually put ansikit in Lua's require directory
-or use in Hilbish.
+## Requirements
+- Hilbish v0.4.0-dev.3
 
 # Usage
 `lua hilbifetch.lua`  
