@@ -13,11 +13,10 @@ But this time, it's written and configured in Lua.
 > Hilbifetch is in a very early state, expect it to look weird or have odd bugs.
 
 ## Requirements
-- Hilbish v0.4.0-dev.3
+- Hilbish v0.4.0-dev.4+ (latest git version)
 
 # Usage
-`lua hilbifetch.lua`  
-Or within Hilbish, `dofile 'hilbifetch.lua'`
+`hilbifetch`
 
 # License
 Hilbifetch is licensed under the BSD 3-Clause license.  
