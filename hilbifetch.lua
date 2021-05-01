@@ -74,6 +74,15 @@ function info(tbl)
 
 				local uptime = upout:gsub('up ', ''):gsub('\n', '')
 				return uptime
+			elseif k == 'terminal' then
+				return os.getenv 'TERM'
+			elseif k == 'shell' then
+				local shellbin = os.getenv 'SHELL'
+				local f = io.popen(shellbin .. ' -v')
+				local sh = f:read '*a'
+				f:close()
+
+				return sh:gsub('\n', '')
 			end
 		end
 		infotable[k] = {name = v, infofunc = _infofunc}
