@@ -51,28 +51,28 @@ function info(tbl)
 	local i = 1
 	for k, v in pairs(tbl) do
 		local function _infofunc()
-			if k == "os" then
+			if k == 'os' then
 				-- Should always exist on unix
-				local f = io.open("/etc/os-release", "rb")
+				local f = io.open('/etc/os-release', 'rb')
 				local content = f:read '*a'
 				f:close()
 
-				local os = string.split(content, "\n")[1]
-				os = string.split(os, "=")[2]:gsub("\"", "")
+				local os = string.split(content, '\n')[1]
+				os = string.split(os, "=")[2]:gsub('"', '')
 				return os
-			elseif k == "kernel" then
+			elseif k == 'kernel' then
 				local f = io.popen 'uname -r'
 				local content = f:read '*a'
 				f:close()
 
-				local kernel = content:split("-")[1]
+				local kernel = content:split('-')[1]
 				return kernel
-			elseif k == "uptime" then
+			elseif k == 'uptime' then
 				local f = io.popen 'uptime -p'
 				local upout = f:read '*a'
 				f:close()
 
-				local uptime = upout:gsub("up ", ""):gsub('\n', '')
+				local uptime = upout:gsub('up ', ''):gsub('\n', '')
 				return uptime
 			end
 		end
@@ -85,7 +85,7 @@ end
 dofile 'config.lua'
 
 -- Hilbifetch - Where we actually print our info
-local asciiarr = string.split(ascii, "\n")
+local asciiarr = string.split(ascii, '\n')
 local _, len = longest(asciiarr)
 
 for i = 1, #asciiarr do
@@ -93,13 +93,13 @@ for i = 1, #asciiarr do
 	local infotbl = infotable[infoidx[i]]
 	local infoname = nil
 	local inf = nil
-	local fullinfo = ""
+	local fullinfo = ''
 	if infotbl ~= nil then
 		infoname = infotbl['name']
 		inf = infotbl['infofunc']()
 		fullinfo = ansikit.format('{bold}{blue}' .. infoname .. '{reset}') .. ' > ' .. inf
 	end
 	local spacecount = len - string.len(asciipart)
-	print(asciipart .. string.rep(" ", spacecount) .. fullinfo)
+	print(asciipart .. string.rep(' ', spacecount) .. fullinfo)
 end
 
