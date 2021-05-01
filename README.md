@@ -1,6 +1,8 @@
 # Hilbifetch
 > Simple and small fetch written in Lua.
 
+<img src="preview.png">
+
 Hilbifetch is your average system info fetch inspired by Neofetch, my own
 [Bunnyfetch](https://github.com/Luvella/Bunnyfetch) and the others.  
 But this time, it's written and configured in Lua.
