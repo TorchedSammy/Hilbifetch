@@ -1,3 +1,4 @@
+#!/bin/hilbish
 local ansikit = require 'ansikit'
 local infotable = {}
 local infoidx = {}
@@ -47,6 +48,10 @@ function longest(arr)
 end
 
 -- For config.lua
+-- Title and info separator
+sep = ' > '
+
+-- Info function to declare what to output
 function info(tbl)
 	local i = 1
 	for k, v in pairs(tbl) do
@@ -117,7 +122,7 @@ for i = 1, #asciiarr do
 	if infotbl ~= nil then
 		infoname = infotbl['name']
 		inf = infotbl['infofunc']()
-		fullinfo = ansikit.format('{bold}{blue}' .. infoname .. '{reset}') .. ' > ' .. inf
+		fullinfo = ansikit.format('{bold}{blue}' .. infoname .. '{reset}') .. sep  .. inf
 	end
 	local spacecount = len - string.len(asciipart)
 	print(asciipart .. string.rep(' ', spacecount) .. fullinfo)

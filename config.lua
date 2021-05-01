@@ -1,7 +1,8 @@
+sep = ' '
 info({
-	os = "os",
-	kernel = "corn",
-	uptime = 'up',
-	terminal = 'term',
-	shell = 'sh'
+	os = 'OS',
+	kernel = 'Kernel',
+	uptime = 'Up',
+	terminal = 'Terminal',
+	shell = 'Shell'
 })
