@@ -60,6 +60,20 @@ function info(tbl)
 				local os = string.split(content, "\n")[1]
 				os = string.split(os, "=")[2]:gsub("\"", "")
 				return os
+			elseif k == "kernel" then
+				local f = io.popen 'uname -r'
+				local content = f:read '*a'
+				f:close()
+
+				local kernel = content:split("-")[1]
+				return kernel
+			elseif k == "uptime" then
+				local f = io.popen 'uptime -p'
+				local upout = f:read '*a'
+				f:close()
+
+				local uptime = upout:gsub("up ", ""):gsub('\n', '')
+				return uptime
 			end
 		end
 		infotable[k] = {name = v, infofunc = _infofunc}
