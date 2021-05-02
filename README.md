@@ -9,14 +9,31 @@ Hilbifetch is your average system info fetch inspired by Neofetch, my own
 [Bunnyfetch](https://github.com/Luvella/Bunnyfetch) and the others.  
 But this time, it's written and configured in Lua.
 
+# Requirements
+- [Hilbish](https://github.com/Hilbis/Hilbish) v0.4.0+
+> Just like Neofetch uses bash, Hilbifetch uses Hilbish,
+and so does the install script
+
 # Setup
 > Hilbifetch is in a very early state, expect it to look weird or have odd bugs.
+```sh
+git clone https://github.com/Hilbis/Hilbifetch
+cd Hilbifetch
+sudo ./install.lua
+```
 
-## Requirements
-- Hilbish v0.4.0-dev.4+ (latest git version)
+To install to a different directory (like `$HOME/bin`):
+```
+PREFIX=~ ./install.lua
+```
 
 # Usage
-`hilbifetch`
+`hilbifetch`  
+
+Configuration is done via the Lua file `~/.config/hilbifetch/hfconf.lua`.  
+Variables that can be changed:
+- `sep`: the separator between the info title and info
+- `ascii`: ascii art to use in fetch
 
 # License
 Hilbifetch is licensed under the BSD 3-Clause license.  
