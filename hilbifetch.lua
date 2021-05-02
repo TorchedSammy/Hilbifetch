@@ -1,5 +1,5 @@
 #!/bin/hilbish
-local ansikit = require 'ansikit'
+local lunacolors = require 'lunacolors'
 local infotable = {}
 local infoidx = {}
 
@@ -96,11 +96,11 @@ function info(tbl)
 	end
 end
 
-local ok = pcall(function() dofile 'hfconf.lua' end)
+local ok = pcall(function()
+	dofile (os.getenv 'HOME' .. '/.config/hilbifetch/hfconf.lua')
+end)
 if not ok then
-	pcall(function()
-		dofile (os.getenv 'HOME' .. '/.config/hilbifetch/hfconf.lua')
-	end)
+	pcall(function() dofile 'hfconf.lua' end)
 end
 
 -- Hilbifetch - Where we actually print our info
@@ -120,14 +120,13 @@ for i = 1, #asciiarr do
 		hostname = f:read '*a'
 		f:close()
 
-		fullinfo = ansikit.format '{bold}{magenta}' .. username .. '@'
-		.. hostname:gsub('\n', '') .. ansikit.format '{reset}'
+		fullinfo = lunacolors.magenta(username .. '@' .. hostname:gsub('\n', ''))
 	end
 	if i == 2 then fullinfo = string.rep('~', hostname:len() + 1 + username:len()) end
 	if infotbl ~= nil then
 		infoname = infotbl['name']
 		inf = infotbl['infofunc']()
-		fullinfo = ansikit.format('{bold}{blue}' .. infoname .. '{reset}') .. sep  .. inf
+		fullinfo = lunacolors.bold(lunacolors.blue(infoname)) .. sep  .. inf
 	end
 	local spacecount = len - string.len(asciipart)
 	print(asciipart .. string.rep(' ', spacecount) .. fullinfo)
