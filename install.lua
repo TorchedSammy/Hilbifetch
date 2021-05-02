@@ -42,6 +42,6 @@ assert(dest, e)
 dest:write(source)
 dest:close()
 
-os.execute('chmod 755 ' .. binpath)
+os.execute('chmod 755 ' .. binpath .. '/hilbifetch')
 print('Installed Hilbifetch to ' .. binpath .. '/hilbifetch')
 
