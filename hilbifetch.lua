@@ -100,6 +100,9 @@ local ok = pcall(function()
 	dofile (os.getenv 'HOME' .. '/.config/hilbifetch/hfconf.lua')
 end)
 if not ok then
+	ok = pcall(function() dofile '/etc/hfconf.lua' end)
+end
+if not ok then
 	pcall(function() dofile 'hfconf.lua' end)
 end
 
