@@ -1,4 +1,3 @@
-sep = ' '
 info({
 	os = 'OS',
 	kernel = 'Kernel',
