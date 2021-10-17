@@ -54,7 +54,7 @@ colors = true
 
 -- Color function to print colors
 function colors(line)
-	local r = "\27[49m"
+	local r = '\27[49m'
 
 	if line == 1 then
 		local l = ''
