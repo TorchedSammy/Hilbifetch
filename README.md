@@ -34,6 +34,7 @@ Configuration is done via the Lua file `~/.config/hilbifetch/hfconf.lua`.
 Variables that can be changed:
 - `sep`: the separator between the info title and info
 - `ascii`: ascii art to use in fetch
+- `colors`: enable color blocks
 
 # License
 Hilbifetch is licensed under the BSD 3-Clause license.  
