@@ -4,18 +4,18 @@ local infotable = {}
 local infoidx = {}
 
 -- ASCII art
-local ascii =
-[[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣐⣶⣶⣀⡀⣤⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⣠⣴⣖⢶⣶⣦⣀⢰⣿⣿⣿⣿⠏⠀⠀⣐⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⣸⣿⣿⣿⣯⣻⣿⣿⢹⣿⣿⣿⡟⠠⠨⠪⠂⣰⣦⣄⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⢠⢯⣶⣮⢿⣿⣷⡽⣿⡘⣿⡿⣿⠁⡑⠡⠃⣰⣿⣿⣿⣦⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠈⠉⠑⠛⢿⣿⣿⣇⣿⠇⠁⡐⠀⢀⣬⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⣠⣴⣶⣴⣽⢿⣯⠸⡀⡐⠀⠐⢱⣙⣮⣭⣿⣿⠿⠷⠀⠀⠀⠀
-⠀⠀⠀⠀⣠⣻⣿⠿⣿⣿⣟⣩⡑⠀⢠⠁⠀⠮⠿⠶⠶⠦⣌⡁⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⢈⣿⣿⣿⣿⣷⣿⣿⢟⣍⣤⣨⡴⣄⢎⢍⡖⡿⠽⣿⣟⣷⣄⠀⠀⠀⠀
-⠀⠀⠀⠸⣿⣿⣿⣿⢿⣯⣮⣟⣾⣿⠋⠘⠉⠑⣳⡻⣦⣯⣽⣿⣿⣿⡀⠀⠀⠀
-⠀⠀⠀⠀⠘⢿⣷⣽⣿⡿⡎⠛⠋⠁⠀⠀⠀⠀⢳⢿⣽⣷⣿⣝⢿⡿⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠉⠙⠻⠋⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣽⣾⡿⠟⠁⠀⠀⠀⠀]]
+ascii =
+[[  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣐⣶⣶⣀⡀⣤⠄⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣠⣴⣖⢶⣶⣦⣀⢰⣿⣿⣿⣿⠏⠀⠀⣐⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣸⣿⣿⣿⣯⣻⣿⣿⢹⣿⣿⣿⡟⠠⠨⠪⠂⣰⣦⣄⠀⠀⠀
+⠀⠀⠀⢠⢯⣶⣮⢿⣿⣷⡽⣿⡘⣿⡿⣿⠁⡑⠡⠃⣰⣿⣿⣿⣦⠀⠀
+⠀⠀⠀⠀⠀⠈⠉⠑⠛⢿⣿⣿⣇⣿⠇⠁⡐⠀⢀⣬⣿⣿⣿⣿⣿⡄⠀
+⠀⠀⠀⠀⠀⠀⣠⣴⣶⣴⣽⢿⣯⠸⡀⡐⠀⠐⢱⣙⣮⣭⣿⣿⠿⠷⠀
+⠀⠀⠀⠀⣠⣻⣿⠿⣿⣿⣟⣩⡑⠀⢠⠁⠀⠮⠿⠶⠶⠦⣌⡁⠀⠀⠀
+⠀⠀⠀⢈⣿⣿⣿⣿⣷⣿⣿⢟⣍⣤⣨⡴⣄⢎⢍⡖⡿⠽⣿⣟⣷⣄⠀
+⠀⠀⠀⠸⣿⣿⣿⣿⢿⣯⣮⣟⣾⣿⠋⠘⠉⠑⣳⡻⣦⣯⣽⣿⣿⣿⡀
+⠀⠀⠀⠀⠘⢿⣷⣽⣿⡿⡎⠛⠋⠁⠀⠀⠀⠀⢳⢿⣽⣷⣿⣝⢿⡿⠀
+⠀⠀⠀⠀⠀⠀⠉⠙⠻⠋⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣽⣾⡿⠟⠁⠀]]
 
 -- Utility Functions
 function string.split(str, delimiter)
@@ -50,6 +50,27 @@ end
 -- For config.lua
 -- Title and info separator
 sep = ' > '
+colors = true
+
+-- Color function to print colors
+function colors()
+	local r = '\27[49m'
+	local result = {'', ''}
+
+	for i=0,7 do
+		result[1] = result[1] .. '\27[4' .. i .. 'm   '
+	end
+
+	result[1] = result[1] .. r
+
+	for i=0,7 do
+		result[2] = result[2] .. '\27[10' .. i .. 'm   '
+	end
+	
+	result[2] = result[2] .. r
+	
+	return result
+end
 
 -- Info function to declare what to output
 function info(tbl)
@@ -110,6 +131,15 @@ end
 local asciiarr = string.split(ascii, '\n')
 local _, len = longest(asciiarr)
 
+-- Make sure we have enough space to print colors
+local linecount = 2 + #infoidx + 1
+if colors then linecount = linecount + 3 end
+if #asciiarr < linecount then
+	for i = #asciiarr, linecount - 2 do
+		table.insert(asciiarr, '')
+	end
+end
+
 for i = 1, #asciiarr do
 	asciipart = asciiarr[i]
 	local infotbl = infotable[infoidx[i - 2]]
@@ -131,7 +161,13 @@ for i = 1, #asciiarr do
 		inf = infotbl['infofunc']()
 		fullinfo = lunacolors.bold(lunacolors.blue(infoname)) .. sep  .. inf
 	end
-	local spacecount = len - string.len(asciipart)
+
+	local colorinfo = colors()
+	if colors and i >= linecount - 2 then
+		if i == linecount - 2 then fullinfo = colorinfo[1] end
+		if i == linecount - 1 then fullinfo = colorinfo[2] end
+	end
+
+	local spacecount = len - string.len(asciipart) + 3
 	print(asciipart .. string.rep(' ', spacecount) .. fullinfo)
 end
-
