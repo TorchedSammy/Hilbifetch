@@ -53,24 +53,23 @@ sep = ' > '
 colors = true
 
 -- Color function to print colors
-function colors(line)
+function colors()
 	local r = '\27[49m'
+	local result = {'', ''}
 
-	if line == 1 then
-		local l = ''
-		for i=0,7 do
-			l = l .. '\27[4' .. i .. 'm   '
-		end
-		return l .. r
+	for i=0,7 do
+		result[1] = result[1] .. '\27[4' .. i .. 'm   '
 	end
 
-	if line == 2 then
-		local l = ''
-		for i=0,7 do
-			l = l .. '\27[10' .. i .. 'm   '
-		end
-		return l .. r
+	result[1] = result[1] .. r
+
+	for i=0,7 do
+		result[2] = result[2] .. '\27[10' .. i .. 'm   '
 	end
+	
+	result[2] = result[2] .. r
+	
+	return result
 end
 
 -- Info function to declare what to output
@@ -163,9 +162,10 @@ for i = 1, #asciiarr do
 		fullinfo = lunacolors.bold(lunacolors.blue(infoname)) .. sep  .. inf
 	end
 
+	local colorinfo = colors()
 	if colors and i >= linecount - 2 then
-		if i == linecount - 2 then fullinfo = colors(1) end
-		if i == linecount - 1 then fullinfo = colors(2) end
+		if i == linecount - 2 then fullinfo = colorinfo[1] end
+		if i == linecount - 1 then fullinfo = colorinfo[2] end
 	end
 
 	local spacecount = len - string.len(asciipart) + 3
