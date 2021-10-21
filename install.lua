@@ -14,19 +14,9 @@ local prefix = os.getenv 'PREFIX' and os.getenv 'PREFIX' or '/usr'
 local binpath = destdir .. prefix .. '/bin'
 local confpath = os.getenv 'HOME' .. '/.config/hilbifetch'
 
--- i should really make fs.mkdir recursive :\
-function mkdirAll(path)
-	local dirarr = string.split(path, '/')
-	local appendeddir = ''
-	for i = 1, #dirarr do
-		appendeddir = appendeddir .. dirarr[i] .. '/'
-		fs.mkdir(appendeddir)
-	end
-end
-
 -- makes our destination directory if it doesnt exist
-mkdirAll(binpath)
-mkdirAll(confpath)
+fs.mkdir(binpath, true)
+fs.mkdir(confpath, true)
 
 -- Copy config
 local confdest, e = io.open(confpath .. '/hfconf.lua', 'w+')
