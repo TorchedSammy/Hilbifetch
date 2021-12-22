@@ -39,18 +39,18 @@ function colors()
 	local r = '\27[49m'
 	local result = {'', ''}
 
-	for i=0,7 do
+	for i = 0, 7 do
 		result[1] = result[1] .. '\27[4' .. i .. 'm   '
 	end
 
 	result[1] = result[1] .. r
 
-	for i=0,7 do
+	for i = 0, 7 do
 		result[2] = result[2] .. '\27[10' .. i .. 'm   '
 	end
-	
+
 	result[2] = result[2] .. r
-	
+
 	return result
 end
 
