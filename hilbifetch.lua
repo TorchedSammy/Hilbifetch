@@ -101,14 +101,19 @@ function info(tbl)
 						:gsub('MemTotal:%s+', '')
 						:gsub(' kB\n', '')
 			
-					usedMem = io.popen("free | grep Mem"):read("*a"):gsub("[%a%p]+%s+%d+%s+", '')
-					local i, j = usedMem:find("%d+")
+					p = io.popen 'free | grep Mem'
+					usedMem = p:read '*a'
+					usedMem = usedMem:gsub('[%a%p]+%s+%d+%s+', '')
+	
+					local i, j = usedMem:find '%d+'
 					usedMem = usedMem:sub(i, j)
 				else
 					memTotal = 0
 					usedMem = 0
 				end
 			
+				f:close()
+
 				return string.format('%.0f/%.0fMiB', tonumber(usedMem) / 1024, tonumber(memTotal) / 1024)
 			end
 		end
