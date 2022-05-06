@@ -5,7 +5,7 @@ local infoidx = {}
 
 -- ASCII art
 ascii =
-[[  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣐⣶⣶⣀⡀⣤⠄⠀⠀⠀⠀⠀⠀⠀⠀
+[[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣐⣶⣶⣀⡀⣤⠄⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⣠⣴⣖⢶⣶⣦⣀⢰⣿⣿⣿⣿⠏⠀⠀⣐⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⣸⣿⣿⣿⣯⣻⣿⣿⢹⣿⣿⣿⡟⠠⠨⠪⠂⣰⣦⣄⠀⠀⠀
 ⠀⠀⠀⢠⢯⣶⣮⢿⣿⣷⡽⣿⡘⣿⡿⣿⠁⡑⠡⠃⣰⣿⣿⣿⣦⠀⠀
@@ -91,6 +91,30 @@ function info(tbl)
 				f:close()
 
 				return sh:gsub('\n', '')
+			elseif k == 'memory' then
+				local f = io.open('/proc/meminfo', 'rb')
+				local meminfo = f:read '*a'
+				local memTotal, usedMem
+				if meminfo then
+					memTotal = meminfo:sub(select(1, meminfo:find 'MemTotal:' ), -1)
+					memTotal = memTotal:sub(1, select(2, memTotal:find '\n' ))
+						:gsub('MemTotal:%s+', '')
+						:gsub(' kB\n', '')
+			
+					p = io.popen 'free | grep Mem'
+					usedMem = p:read '*a'
+					usedMem = usedMem:gsub('[%a%p]+%s+%d+%s+', '')
+	
+					local i, j = usedMem:find '%d+'
+					usedMem = usedMem:sub(i, j)
+				else
+					memTotal = 0
+					usedMem = 0
+				end
+			
+				f:close()
+
+				return string.format('%.0f/%.0fMiB', tonumber(usedMem) / 1024, tonumber(memTotal) / 1024)
 			end
 		end
 		infotable[k] = {name = v, infofunc = _infofunc}

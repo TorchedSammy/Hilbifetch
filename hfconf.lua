@@ -3,5 +3,6 @@ info({
 	kernel = 'Kernel',
 	uptime = 'Up',
 	terminal = 'Terminal',
-	shell = 'Shell'
+	shell = 'Shell',
+	memory = 'Memory'
 })
