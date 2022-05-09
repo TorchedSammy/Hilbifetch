@@ -9,6 +9,7 @@ local hilbifetch = {
 		'uptime',
 		'terminal',
 		'shell',
+		{'padding', showName = false},
 		{'colors', showName = false}
 	}
 }
@@ -126,6 +127,21 @@ hilbifetch.addInfo('memory', function()
 	f:close()
 
 	return string.format('%.0f/%.0fMiB', tonumber(usedMem) / 1024, tonumber(memTotal) / 1024)
+end)
+
+
+hilbifetch.addInfo('padding', function()
+	local amount
+
+	for i, v in ipairs(hilbifetch.order) do
+		local entry = type(v) == 'table' and v[1] or v
+
+		if entry == 'padding' then
+			amount = #hilbifetch.ascii:split('\n') - i - 1
+		end
+	end
+
+	return string.rep(' ', amount):split(' ')
 end)
 
 function longest(arr)
