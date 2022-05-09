@@ -129,7 +129,6 @@ hilbifetch.addInfo('memory', function()
 	return string.format('%.0f/%.0fMiB', tonumber(usedMem) / 1024, tonumber(memTotal) / 1024)
 end)
 
-
 hilbifetch.addInfo('padding', function()
 	local amount
 
@@ -144,6 +143,10 @@ hilbifetch.addInfo('padding', function()
 	return string.rep(' ', amount < 0 and 0 or amount):split(' ')
 end)
 
+hilbifetch.addInfo('terminal', function()
+	return os.getenv 'TERM'
+end)
+
 function longest(arr)
 	local longestint = 0
 	local longestidx = 1
@@ -155,10 +158,6 @@ function longest(arr)
 
 	return longestidx, longestint
 end
-
-hilbifetch.addInfo('terminal', function()
-	return os.getenv 'TERM'
-end)
 
 function hilbifetch.echo()
 	local asciiArr = string.split(hilbifetch.ascii, '\n')
