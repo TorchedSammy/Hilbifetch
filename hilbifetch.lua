@@ -141,7 +141,7 @@ hilbifetch.addInfo('padding', function()
 		end
 	end
 
-	return string.rep(' ', amount):split(' ')
+	return string.rep(' ', amount < 0 and 0 or amount):split(' ')
 end)
 
 function longest(arr)
