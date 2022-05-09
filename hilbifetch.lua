@@ -1,11 +1,23 @@
 #!/bin/hilbish
 local lunacolors = require 'lunacolors'
+local hilbifetch = {
+	order = {
+		{'title', showName = false},
+		{'infosep', showName = false},
+		'os',
+		'kernel',
+		'uptime',
+		'terminal',
+		'shell',
+		{'colors', showName = false}
+	}
+}
 local infotable = {}
-local infoidx = {}
+local displayName = {}
 
 -- ASCII art
-ascii =
-[[⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣐⣶⣶⣀⡀⣤⠄⠀⠀⠀⠀⠀⠀⠀⠀
+hilbifetch.ascii =
+[[  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣐⣶⣶⣀⡀⣤⠄⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⣠⣴⣖⢶⣶⣦⣀⢰⣿⣿⣿⣿⠏⠀⠀⣐⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⣸⣿⣿⣿⣯⣻⣿⣿⢹⣿⣿⣿⡟⠠⠨⠪⠂⣰⣦⣄⠀⠀⠀
 ⠀⠀⠀⢠⢯⣶⣮⢿⣿⣷⡽⣿⡘⣿⡿⣿⠁⡑⠡⠃⣰⣿⣿⣿⣦⠀⠀
@@ -16,26 +28,34 @@ ascii =
 ⠀⠀⠀⠸⣿⣿⣿⣿⢿⣯⣮⣟⣾⣿⠋⠘⠉⠑⣳⡻⣦⣯⣽⣿⣿⣿⡀
 ⠀⠀⠀⠀⠘⢿⣷⣽⣿⡿⡎⠛⠋⠁⠀⠀⠀⠀⢳⢿⣽⣷⣿⣝⢿⡿⠀
 ⠀⠀⠀⠀⠀⠀⠉⠙⠻⠋⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣽⣾⡿⠟⠁⠀]]
+hilbifetch.sep = ' > '
 
-function longest(arr)
-	local longestint = 0
-	local longestidx = 1
-	for i = 1, #arr do
-		if string.len(arr[i]) > longestint then
-			longestint, longestidx = string.len(arr[i]), i
-		end
-	end
-
-	return longestidx, longestint
+function hilbifetch.addInfo(name, cb)
+	infotable[name] = cb
 end
 
--- For config.lua
--- Title and info separator
-sep = ' > '
-colors = true
+function hilbifetch.getInfo(name)
+	return infotable[name]()
+end
 
--- Color function to print colors
-function colors()
+function hilbifetch.setDisplay(name, display)
+	displayName[name] = display
+end
+
+function hilbifetch.getDisplay(name)
+	return displayName[name]
+end
+
+hilbifetch.addInfo('title', function()
+	return string.format('%s@%s', hilbish.user, hilbish.host)
+end)
+
+hilbifetch.addInfo('infosep', function()
+	local title = hilbifetch.getInfo 'title'
+	return string.rep('~', title:len() + 1)
+end)
+
+hilbifetch.addInfo('colors', function()
 	local r = '\27[49m'
 	local result = {'', ''}
 
@@ -52,128 +72,143 @@ function colors()
 	result[2] = result[2] .. r
 
 	return result
-end
-
--- Info function to declare what to output
-function info(tbl)
-	local i = 1
-	for k, v in pairs(tbl) do
-		local function _infofunc()
-			if k == 'os' then
-				-- Should always exist on unix
-				local f = io.open('/etc/os-release', 'rb')
-				local content = f:read '*a'
-				f:close()
-
-				local os = string.split(content, '\n')[1]
-				os = string.split(os, "=")[2]:gsub('"', '')
-				return os
-			elseif k == 'kernel' then
-				local f = io.popen 'uname -r'
-				local content = f:read '*a'
-				f:close()
-
-				local kernel = content:split('-')[1]
-				return kernel
-			elseif k == 'uptime' then
-				local f = io.popen 'uptime -p'
-				local upout = f:read '*a'
-				f:close()
-
-				local uptime = upout:gsub('up ', ''):gsub('\n', '')
-				return uptime
-			elseif k == 'terminal' then
-				return os.getenv 'TERM'
-			elseif k == 'shell' then
-				local shellbin = os.getenv 'SHELL'
-				local f = io.popen(shellbin .. ' -v')
-				local sh = f:read '*a'
-				f:close()
-
-				return sh:gsub('\n', '')
-			elseif k == 'memory' then
-				local f = io.open('/proc/meminfo', 'rb')
-				local meminfo = f:read '*a'
-				local memTotal, usedMem
-				if meminfo then
-					memTotal = meminfo:sub(select(1, meminfo:find 'MemTotal:' ), -1)
-					memTotal = memTotal:sub(1, select(2, memTotal:find '\n' ))
-						:gsub('MemTotal:%s+', '')
-						:gsub(' kB\n', '')
-			
-					p = io.popen 'free | grep Mem'
-					usedMem = p:read '*a'
-					usedMem = usedMem:gsub('[%a%p]+%s+%d+%s+', '')
-	
-					local i, j = usedMem:find '%d+'
-					usedMem = usedMem:sub(i, j)
-				else
-					memTotal = 0
-					usedMem = 0
-				end
-			
-				f:close()
-
-				return string.format('%.0f/%.0fMiB', tonumber(usedMem) / 1024, tonumber(memTotal) / 1024)
-			end
-		end
-		infotable[k] = {name = v, infofunc = _infofunc}
-		infoidx[i] = k
-		i = i + 1
-	end
-end
-
-local ok = pcall(function()
-	dofile (os.getenv 'HOME' .. '/.config/hilbifetch/hfconf.lua')
 end)
-if not ok then
-	ok = pcall(function() dofile '/etc/hfconf.lua' end)
-end
-if not ok then
-	pcall(function() dofile 'hfconf.lua' end)
+
+hilbifetch.addInfo('os', function()
+	return hilbish.os.name
+end)
+
+hilbifetch.addInfo('kernel', function()
+	local f = io.open '/proc/version'
+	local content = f:read '*a'
+	f:close()
+
+	local kernel = content:split(' ')[3]:split('-')[1]
+	return kernel
+end)
+
+hilbifetch.addInfo('uptime', function()
+	local _, upout = hilbish.run('uptime -p', false)
+
+	-- (temporary) workaround for the `up` removal; an empty string doesnt work ??
+	local uptime = upout:gsub('\n', ''):gsub('up ', '\0')
+	return uptime
+end)
+
+hilbifetch.addInfo('shell', function()
+	local shellbin = os.getenv 'SHELL'
+	local _, out = hilbish.run(shellbin .. ' -v', false)
+
+	return out:gsub('\n', '')
+end)
+
+hilbifetch.addInfo('memory', function()
+	local f = io.open('/proc/meminfo', 'rb')
+	local meminfo = f:read '*a'
+	local memTotal, usedMem
+	if meminfo then
+		memTotal = meminfo:sub(select(1, meminfo:find 'MemTotal:' ), -1)
+		memTotal = memTotal:sub(1, select(2, memTotal:find '\n'))
+		:gsub('MemTotal:%s+', '')
+			:gsub(' kB\n', '')
+
+		p = io.popen 'free | grep Mem'
+		usedMem = p:read '*a'
+		usedMem = usedMem:gsub('[%a%p]+%s+%d+%s+', '')
+
+		local i, j = usedMem:find '%d+'
+		usedMem = usedMem:sub(i, j)
+	else
+		memTotal = 0
+		usedMem = 0
+	end
+
+	f:close()
+
+	return string.format('%.0f/%.0fMiB', tonumber(usedMem) / 1024, tonumber(memTotal) / 1024)
+end)
+
+function longest(arr)
+	local longestint = 0
+	local longestidx = 1
+	for i = 1, #arr do
+		if utf8.len(arr[i]) > longestint then
+			longestint, longestidx = utf8.len(arr[i]), i
+		end
+	end
+
+	return longestidx, longestint
 end
 
--- Hilbifetch - Where we actually print our info
-local asciiarr = string.split(ascii, '\n')
-local _, len = longest(asciiarr)
+hilbifetch.addInfo('terminal', function()
+	return os.getenv 'TERM'
+end)
 
--- Make sure we have enough space to print colors
-local linecount = 2 + #infoidx + 1
-if colors then linecount = linecount + 3 end
-if #asciiarr < linecount then
-	for i = #asciiarr, linecount - 2 do
-		table.insert(asciiarr, '')
+function hilbifetch.echo()
+	local asciiArr = string.split(hilbifetch.ascii, '\n')
+	for i, _ in ipairs(asciiArr) do
+		asciiArr[i] = asciiArr[i]:gsub('^%s*(.-)$', '%1')
+	end
+	local _, len = longest(asciiArr)
+
+	local done = false
+	local idx = 0
+	local infos = {}
+
+	for i, _ in ipairs(hilbifetch.order) do
+		local infPiece = hilbifetch.order[i]
+		local infoKey = infPiece
+		if type(infPiece) == 'table' then
+			infoKey = infPiece[1]
+		else
+			infPiece = {}
+		end
+
+		local inf = hilbifetch.getInfo(infoKey)
+		local display = hilbifetch.getDisplay(infoKey)
+		local infName = display or infoKey
+		local infFormat = ''
+		if infPiece.showName ~= false then
+			infFormat = infName .. hilbifetch.sep
+		end
+		if type(inf) == 'table' then
+			for j, v in ipairs(inf) do
+				if j == 1 then
+					infFormat = infFormat .. v
+				else
+					infFormat = v
+				end
+				table.insert(infos, infFormat)
+			end
+		else
+			table.insert(infos, infFormat .. inf)
+		end
+	end
+
+	while not done do
+		local infoPart = ''
+
+		idx = idx + 1
+		local asciiPart = asciiArr[idx]
+		local spacecount = len + 3
+		if asciiPart then
+			infoPart = asciiPart
+			spacecount = len - utf8.len(asciiPart) + 3
+		end
+
+		local info = infos[idx]
+		if info then
+			infoPart = infoPart .. string.rep(' ', spacecount) .. info
+		end
+
+		infoPart = infoPart .. '\n'
+		if infoPart == '\n' then
+			done = true
+		end
+
+		io.write(infoPart)
+		io.flush()
 	end
 end
 
-for i = 1, #asciiarr do
-	asciipart = asciiarr[i]
-	local infotbl = infotable[infoidx[i - 2]]
-	local infoname = nil
-	local inf = nil
-	local fullinfo = ''
-	if i == 1 then
-		username = os.getenv 'USER'
-
-		local f = io.open('/etc/hostname', 'rb')
-		hostname = f:read '*a'
-		f:close()
-
-		fullinfo = lunacolors.magenta(username .. '@' .. hostname:gsub('\n', ''))
-	end
-	if i == 2 then fullinfo = string.rep('~', hostname:len() + 1 + username:len()) end
-	if infotbl ~= nil then
-		infoname = infotbl['name']
-		inf = infotbl['infofunc']()
-		fullinfo = lunacolors.bold(lunacolors.blue(infoname)) .. sep  .. inf
-	end
-
-	local colorinfo = colors()
-	if colors and i >= linecount - 2 then
-		if i == linecount - 2 then fullinfo = colorinfo[1] end
-		if i == linecount - 1 then fullinfo = colorinfo[2] end
-	end
-
-	local spacecount = len - string.len(asciipart) + 3
-	print(asciipart .. string.rep(' ', spacecount) .. fullinfo)
-end
+hilbifetch.echo()

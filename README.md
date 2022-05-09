@@ -10,12 +10,12 @@ Hilbifetch is your average system info fetch inspired by Neofetch, my own
 But this time, it's written and configured in Lua.
 
 # Requirements
-- [Hilbish](https://github.com/Rosettea/Hilbish) v0.4.0+
+- [Hilbish](https://github.com/Rosettea/Hilbish) master branch
 
 # Setup
 > Hilbifetch is in a very early state, expect it to look weird or have odd bugs.
 ```sh
-git clone https://github.com/Hilbis/Hilbifetch
+git clone https://github.com/TorchedSammy/Hilbifetch
 cd Hilbifetch
 sudo ./install.lua
 ```
