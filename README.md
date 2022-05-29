@@ -50,10 +50,10 @@ hilbifetch.order = {
 	{'colors', showName = false}
 }
 ```
-This is the default order of info. The options available for info are:
-`showName` - Whether to show the display name.
-`color` - Color of the info text.
-`nameColor` - Color of the display name.
+This is the default order of info. The options available for info are:  
+`showName` - Whether to show the display name.  
+`color` - Color of the info text.  
+`nameColor` - Color of the display name.  
 
 - `addInfo(name, callback)`: adds info with `name`.
 - `getInfo(name)`: gets info from `name`
