@@ -26,13 +26,40 @@ PREFIX=/usr/local ./install.lua
 ```
 
 # Usage
-`hilbifetch`  
+`hilbifetch` (or `./hilbifetch.lua`)  
 
-Configuration is done via the Lua file `~/.config/hilbifetch/hfconf.lua`.  
-Variables that can be changed:
-- `sep`: the separator between the info title and info
-- `ascii`: ascii art to use in fetch
-- `colors`: enable color blocks
+Configuration is done via the Lua file `~/.config/hilbifetch/init.lua`.  
+There are a few functions and variables available. They are all accessed
+via the global `hilbifetch` table.
+
+- `sep`: Separator used for info.
+- `ascii`: ASCII art.
+- `order`: A table describing the order of info. The format for keys is either
+a string of an info name or a table with the first entry being the name and other
+options. Example:
+```lua
+hilbifetch.order = {
+	{'title', showName = false},
+	{'infosep', showName = false},
+	'os',
+	'kernel',
+	'uptime',
+	'terminal',
+	'shell',
+	{'padding', showName = false},
+	{'colors', showName = false}
+}
+```
+This is the default order of info. The options available for info are:
+`showName` - Whether to show the display name.
+`color` - Color of the info text.
+`nameColor` - Color of the display name.
+
+- `addInfo(name, callback)`: adds info with `name`.
+- `getInfo(name)`: gets info from `name`
+- `setDisplay(name)`: sets the display name of `name`d info. if the display
+name isn't set, it'll use the normal name instead.
+- `getDisplay(name)`: gets the display name of the `name`d info.
 
 # License
 Hilbifetch is licensed under the BSD 3-Clause license.  
