@@ -184,10 +184,15 @@ function hilbifetch.echo()
 		local infName = display or infoKey
 		local infFormat = ''
 		if infPiece.showName ~= false then
-			infFormat = infName .. hilbifetch.sep
+			local color = infPiece.nameColor or 'bold yellow'
+			color = color:gsub('(%s-)(%w+)', '{%2}')
+			infFormat = lunacolors.format(color .. infName) .. hilbifetch.sep
 		end
+		local infColor = infPiece.color or ''
+		infColor = infColor:gsub('(%s-)(%w+)', '{%2}')
 		if type(inf) == 'table' then
 			for j, v in ipairs(inf) do
+				v = lunacolors.format(infColor .. v)
 				if j == 1 then
 					infFormat = infFormat .. v
 				else
@@ -196,7 +201,7 @@ function hilbifetch.echo()
 				table.insert(infos, infFormat)
 			end
 		else
-			table.insert(infos, infFormat .. inf)
+			table.insert(infos, infFormat .. lunacolors.format(infColor .. inf))
 		end
 	end
 
