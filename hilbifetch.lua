@@ -226,4 +226,11 @@ function hilbifetch.echo()
 	end
 end
 
-hilbifetch.echo()
+if not pcall(debug.getlocal, 4, 1) then
+	local env = setmetatable({hilbifetch = hilbifetch}, {__index = _G})
+	local f, err = loadfile(hilbish.userDir.config .. '/hilbifetch/init.lua', 't', env)
+	assert(f, err)
+	f()
+
+	hilbifetch.echo()
+end
