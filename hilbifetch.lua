@@ -98,7 +98,7 @@ end)
 
 hilbifetch.addInfo('shell', function()
 	local shellbin = os.getenv 'SHELL'
-	local _, out = hilbish.run(shellbin .. ' -v', false)
+	local _, out = hilbish.run(shellbin .. ' --version', false)
 
 	return out:gsub('\n', '')
 end)
