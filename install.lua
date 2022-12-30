@@ -1,4 +1,4 @@
-#!/bin/hilbish
+#!/usr/bin/env hilbish
 local os = require 'os'
 local fs = require 'fs' -- fs module from Hilbish
 
